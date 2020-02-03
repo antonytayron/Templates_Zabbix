@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>4.4</version>
+    <date>2020-01-09T15:22:11Z</date>
+    <groups>
+        <group>
+            <name>Templates</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>005-template_trigger_count_zabbix</template>
+            <name>Template Trigger Count Zabbix</name>
+            <description>Template para exibir a quantidade de trigger por grupo de hosts de acordo com a severidade.&#13;
+&#13;
+Depende dos seguintes scripts Python que devem ser instalado nos Zabbix Proxy em:&#13;
+ '/usr/lib/zabbix/externalscripts/countTriggerSeverityHostGroup.py'&#13;
+ '/usr/lib/zabbix/externalscripts/countGroup_in_Group.py'&#13;
+ '/usr/lib/zabbix/externalscripts/countTriggerHostGroup.py'&#13;
+ '/usr/lib/zabbix/externalscripts/countTriggerHostGroupTag.py'&#13;
+ '/usr/lib/zabbix/externalscripts/countTriggerSeverityHostGroup.py'&#13;
+&#13;
+A permissão do script  deve ser: 755 para o usuario 'root' e grupo 'root'.&#13;
+&#13;
+Para o script funcionar execute os seguintes comandos no CentOS 7 para instalar as dependências de pacotes.&#13;
+&#13;
+sudo yum install -y python python-pip&#13;
+pip install zabbix-api&#13;
+&#13;
+Também será necessário criar um grupo de usuário e associar os hosts com permissão de leitura. Dentro desse grupo de usuários, deve ser criado um usuário para acesso a API do Zabbix para acesso somente de leitura aos grupos de hosts.&#13;
+&#13;
+As credenciais de acesso a API do Zabbix devem ser configurados conforme citado no inicio dos scripts.&#13;
+&#13;
+OBS.: Mais instruções, exemplos de uso e arquivo de configuração estão detalhados no início do script.&#13;
+&#13;
+Edite o arquivo de configuração do Zabbix Agent do servidor Zabbix Proxy. Geralmente, fica em: '/etc/zabbix/zabbix_agentd.conf'.&#13;
+&#13;
+Localize e Altere ou adicione os seguintes parâmetros.&#13;
+&#13;
+Antes:&#13;
+# EnableRemoteCommands=0&#13;
+# LogRemoteCommands = 0&#13;
+# Timeout =3&#13;
+&#13;
+Depois:&#13;
+EnableRemoteCommands=1&#13;
+LogRemoteCommands=1&#13;
+Timetout = 15&#13;
+&#13;
+Reinicie o serviço Zabbix Agent. Será necessário permissão de root. &#13;
+&#13;
+sudo service zabbix-agent stop&#13;
+sudo service zabbix-agent start</description>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>Quantity</name>
+                </application>
+                <application>
+                    <name>Triggers</name>
+                </application>
+            </applications>
+            <items>
+                <item>
+                    <name>Number Hosts in Group with regex: {$REGEX_HOSTGROUP}</name>
+                    <type>EXTERNAL</type>
+                    <key>countHost_in_Group.py[&quot;{$REGEX_HOSTGROUP}&quot;,amount]</key>
+                    <delay>5m</delay>
+                    <history>7d</history>
+                    <trends>30d</trends>
+                    <description>Exibe a quantidade de host que estão no grupo que atende a determinada REGEX no nome.</description>
+                    <applications>
+                        <application>
+                            <name>Quantity</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Number Hosts with Trigger &quot;.* not running&quot; in Group with regex: {$REGEX_HOSTGROUP}</name>
+                    <type>EXTERNAL</type>
+                    <key>countTriggerHostGroup.py[&quot;{$REGEX_HOSTGROUP}&quot;,&quot;.* not running&quot;,amount]</key>
+                    <delay>5m</delay>
+                    <history>7d</history>
+                    <trends>30d</trends>
+                    <status>DISABLED</status>
+                    <description>Exibe a quantidade de host que tem a trigger &quot;.* not running&quot;  no grupo que atende a determinada REGEX no nome.</description>
+                    <applications>
+                        <application>
+                            <name>Quantity</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Number Hosts Unavailable in Group with regex: {$REGEX_HOSTGROUP}</name>
+                    <type>EXTERNAL</type>
+                    <key>countTriggerHostGroup.py[&quot;{$REGEX_HOSTGROUP}&quot;,&quot;Host unavailable&quot;,amount]</key>
+                    <delay>5m</delay>
+                    <history>7d</history>
+                    <trends>30d</trends>
+                    <description>Exibe a quantidade de host que estão inacessíveis no grupo que atende a determinada REGEX no nome.</description>
+                    <applications>
+                        <application>
+                            <name>Quantity</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Number Hosts with Trigger &quot;Processo .* nao esta rodando&quot; in Group with regex: {$REGEX_HOSTGROUP}</name>
+                    <type>EXTERNAL</type>
+                    <key>countTriggerHostGroup.py[&quot;{$REGEX_HOSTGROUP}&quot;,&quot;Processo .* nao esta rodando&quot;,amount]</key>
+                    <delay>5m</delay>
+                    <history>7d</history>
+                    <trends>30d</trends>
+                    <status>DISABLED</status>
+                    <description>Exibe a quantidade de host que tem a trigger &quot;Processo .* nao esta rodando&quot;  no grupo que atende a determinada REGEX no nome.</description>
+                    <applications>
+                        <application>
+                            <name>Quantity</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Number Hosts with &quot;The Firewall Profile Disabled&quot; in Group with regex: {$REGEX_HOSTGROUP}</name>
+                    <type>EXTERNAL</type>
+                    <key>countTriggerHostGroup.py[&quot;{$REGEX_HOSTGROUP}&quot;,&quot;The Firewall Profile&quot;,amount]</key>
+                    <delay>5m</delay>
+                    <history>7d</history>
+                    <trends>30d</trends>
+                    <status>DISABLED</status>
+                    <description>Exibe a quantidade de host que com o &quot;The Firewall Profile Disabled&quot; no grupo que atende a determinada REGEX no nome.</description>
+                    <applications>
+                        <application>
+                            <name>Quantity</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Number Hosts with Problems in BACKUP in Group with regex: {$REGEX_HOSTGROUP}</name>
+                    <type>EXTERNAL</type>
+                    <key>countTriggerHostGroupTag.py[&quot;{$REGEX_HOSTGROUP}&quot;,Service,BACKUP,amount]</key>
+                    <delay>5m</delay>
+                    <history>7d</history>
+                    <trends>30d</trends>
+                    <status>DISABLED</status>
+                    <description>Exibe a quantidade de host que com triggers que possuem a tag Service com o valor BACKUP no grupo que atende a determinada REGEX no nome.</description>
+                    <applications>
+                        <application>
+                            <name>Quantity</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Number Triggers Average</name>
+                    <type>EXTERNAL</type>
+                    <key>countTriggerSeverityHostGroup.py[&quot;{$REGEX_HOSTGROUP}&quot;,&quot;{$AVERAGE}&quot;,amount]</key>
+                    <delay>5m</delay>
+                    <history>7d</history>
+                    <trends>30d</trends>
+                    <description>Exibe a quantidade de trigger por severidade para um grupo de hosts que possui determinada REGEX no nome.</description>
+                    <applications>
+                        <application>
+                            <name>Triggers</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Number Triggers Disaster</name>
+                    <type>EXTERNAL</type>
+                    <key>countTriggerSeverityHostGroup.py[&quot;{$REGEX_HOSTGROUP}&quot;,&quot;{$DISASTER}&quot;,amount]</key>
+                    <delay>5m</delay>
+                    <history>7d</history>
+                    <trends>30d</trends>
+                    <description>Exibe a quantidade de trigger por severidade para um grupo de hosts que possui determinada REGEX no nome.</description>
+                    <applications>
+                        <application>
+                            <name>Triggers</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Number Triggers High</name>
+                    <type>EXTERNAL</type>
+                    <key>countTriggerSeverityHostGroup.py[&quot;{$REGEX_HOSTGROUP}&quot;,&quot;{$HIGH}&quot;,amount]</key>
+                    <delay>5m</delay>
+                    <history>7d</history>
+                    <trends>30d</trends>
+                    <description>Exibe a quantidade de trigger por severidade para um grupo de hosts que possui determinada REGEX no nome.</description>
+                    <applications>
+                        <application>
+                            <name>Triggers</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Number Triggers Information</name>
+                    <type>EXTERNAL</type>
+                    <key>countTriggerSeverityHostGroup.py[&quot;{$REGEX_HOSTGROUP}&quot;,&quot;{$INFO}&quot;,amount]</key>
+                    <delay>5m</delay>
+                    <history>7d</history>
+                    <trends>30d</trends>
+                    <description>Exibe a quantidade de trigger por severidade para um grupo de hosts que possui determinada REGEX no nome.</description>
+                    <applications>
+                        <application>
+                            <name>Triggers</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Number Triggers Not Classfied</name>
+                    <type>EXTERNAL</type>
+                    <key>countTriggerSeverityHostGroup.py[&quot;{$REGEX_HOSTGROUP}&quot;,&quot;{$NOTCLASSFIED}&quot;,amount]</key>
+                    <delay>5m</delay>
+                    <history>7d</history>
+                    <trends>30d</trends>
+                    <description>Exibe a quantidade de trigger por severidade para um grupo de hosts que possui determinada REGEX no nome.</description>
+                    <applications>
+                        <application>
+                            <name>Triggers</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Number Triggers Warning</name>
+                    <type>EXTERNAL</type>
+                    <key>countTriggerSeverityHostGroup.py[&quot;{$REGEX_HOSTGROUP}&quot;,&quot;{$WARNING}&quot;,amount]</key>
+                    <delay>5m</delay>
+                    <history>7d</history>
+                    <trends>30d</trends>
+                    <description>Exibe a quantidade de trigger por severidade para um grupo de hosts que possui determinada REGEX no nome.</description>
+                    <applications>
+                        <application>
+                            <name>Triggers</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Number Triggers Total</name>
+                    <type>EXTERNAL</type>
+                    <key>countTriggerSeverityHostGroup.py[&quot;{$REGEX_HOSTGROUP}&quot;,99,total]</key>
+                    <delay>5m</delay>
+                    <history>7d</history>
+                    <trends>30d</trends>
+                    <description>Exibe a quantidade de trigger para um grupo de hosts que possui determinada REGEX no nome, independente da severidade.</description>
+                    <applications>
+                        <application>
+                            <name>Triggers</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Percent Hosts Unavailable in Group with regex: {$REGEX_HOSTGROUP}</name>
+                    <type>CALCULATED</type>
+                    <key>percent_hosts_unavailable</key>
+                    <delay>5m</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>%</units>
+                    <params>100*last(&quot;countTriggerHostGroup.py[\&quot;{$REGEX_HOSTGROUP}\&quot;,\&quot;Host unavailable\&quot;,amount]&quot;)/last(&quot;countHost_in_Group.py[\&quot;{$REGEX_HOSTGROUP}\&quot;,amount]&quot;)</params>
+                    <description>Percentual de hosts indisponíveis no grupo que atende a Regex: {$REGEX_HOSTGROUP}</description>
+                    <applications>
+                        <application>
+                            <name>Quantity</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Percent Triggers Average in group with regex: {$REGEX_HOSTGROUP}</name>
+                    <type>CALCULATED</type>
+                    <key>percent_trigger_average</key>
+                    <delay>5m</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>%</units>
+                    <params>100*last(&quot;countTriggerSeverityHostGroup.py[\&quot;{$REGEX_HOSTGROUP}\&quot;,\&quot;{$AVERAGE}\&quot;,amount]&quot;)/last(&quot;countTriggerSeverityHostGroup.py[\&quot;{$REGEX_HOSTGROUP}\&quot;,99,total]&quot;)</params>
+                    <description>Percentual de triggers de Average</description>
+                    <applications>
+                        <application>
+                            <name>Triggers</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Percent Triggers Disaster in group with regex: {$REGEX_HOSTGROUP}</name>
+                    <type>CALCULATED</type>
+                    <key>percent_trigger_disaster</key>
+                    <delay>5m</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>%</units>
+                    <params>100*last(&quot;countTriggerSeverityHostGroup.py[\&quot;{$REGEX_HOSTGROUP}\&quot;,\&quot;{$DISASTER}\&quot;,amount]&quot;)/last(&quot;countTriggerSeverityHostGroup.py[\&quot;{$REGEX_HOSTGROUP}\&quot;,99,total]&quot;)</params>
+                    <description>Percentual de triggers de Disaster</description>
+                    <applications>
+                        <application>
+                            <name>Triggers</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Percent Triggers High in group with regex: {$REGEX_HOSTGROUP}</name>
+                    <type>CALCULATED</type>
+                    <key>percent_trigger_high</key>
+                    <delay>5m</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>%</units>
+                    <params>100*last(&quot;countTriggerSeverityHostGroup.py[\&quot;{$REGEX_HOSTGROUP}\&quot;,\&quot;{$HIGH}\&quot;,amount]&quot;)/last(&quot;countTriggerSeverityHostGroup.py[\&quot;{$REGEX_HOSTGROUP}\&quot;,99,total]&quot;)</params>
+                    <description>Percentual de triggers de High</description>
+                    <applications>
+                        <application>
+                            <name>Triggers</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Percent Triggers Information in group with regex: {$REGEX_HOSTGROUP}</name>
+                    <type>CALCULATED</type>
+                    <key>percent_trigger_information</key>
+                    <delay>5m</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>%</units>
+                    <params>100*last(&quot;countTriggerSeverityHostGroup.py[\&quot;{$REGEX_HOSTGROUP}\&quot;,\&quot;{$INFO}\&quot;,amount]&quot;)/last(&quot;countTriggerSeverityHostGroup.py[\&quot;{$REGEX_HOSTGROUP}\&quot;,99,total]&quot;)</params>
+                    <description>Percentual de triggers de Information</description>
+                    <applications>
+                        <application>
+                            <name>Triggers</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Percent Triggers Not Classfied in group with regex: {$REGEX_HOSTGROUP}</name>
+                    <type>CALCULATED</type>
+                    <key>percent_trigger_not_classfied</key>
+                    <delay>5m</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>%</units>
+                    <params>100*last(&quot;countTriggerSeverityHostGroup.py[\&quot;{$REGEX_HOSTGROUP}\&quot;,\&quot;{$NOTCLASSFIED}\&quot;,amount]&quot;)/last(&quot;countTriggerSeverityHostGroup.py[\&quot;{$REGEX_HOSTGROUP}\&quot;,99,total]&quot;)</params>
+                    <description>Percentual de triggers de Not Classfied</description>
+                    <applications>
+                        <application>
+                            <name>Triggers</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Percent Triggers Warning in group with regex: {$REGEX_HOSTGROUP}</name>
+                    <type>CALCULATED</type>
+                    <key>percent_trigger_warning</key>
+                    <delay>5m</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>%</units>
+                    <params>100*last(&quot;countTriggerSeverityHostGroup.py[\&quot;{$REGEX_HOSTGROUP}\&quot;,\&quot;{$WARNING}\&quot;,amount]&quot;)/last(&quot;countTriggerSeverityHostGroup.py[\&quot;{$REGEX_HOSTGROUP}\&quot;,99,total]&quot;)</params>
+                    <description>Percentual de triggers de Warning</description>
+                    <applications>
+                        <application>
+                            <name>Triggers</name>
+                        </application>
+                    </applications>
+                </item>
+            </items>
+            <macros>
+                <macro>
+                    <macro>{$AVERAGE}</macro>
+                    <value>3</value>
+                    <description>Severidade average</description>
+                </macro>
+                <macro>
+                    <macro>{$DISASTER}</macro>
+                    <value>5</value>
+                    <description>Severidade disaster</description>
+                </macro>
+                <macro>
+                    <macro>{$HIGH}</macro>
+                    <value>4</value>
+                    <description>Severidade high</description>
+                </macro>
+                <macro>
+                    <macro>{$INFO}</macro>
+                    <value>1</value>
+                    <description>Severidade information</description>
+                </macro>
+                <macro>
+                    <macro>{$NOTCLASSFIED}</macro>
+                    <value>0</value>
+                    <description>Severidade não classificada</description>
+                </macro>
+                <macro>
+                    <macro>{$REGEX_HOSTGROUP}</macro>
+                    <value>&quot;Switches&quot;</value>
+                    <description>Regex para filtrar o grupo de hosts</description>
+                </macro>
+                <macro>
+                    <macro>{$WARNING}</macro>
+                    <value>2</value>
+                    <description>Severidade warning</description>
+                </macro>
+            </macros>
+        </template>
+    </templates>
+</zabbix_export>
